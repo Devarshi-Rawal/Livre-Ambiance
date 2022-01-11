@@ -15,7 +15,7 @@
         android:text="Book Genres"
         android:textSize="20sp"
         android:letterSpacing="0.2"
-        android:fontFamily="@font/luxuriousromanRegular"
+        android:fontFamily="@font/luxuriousromanregular"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
