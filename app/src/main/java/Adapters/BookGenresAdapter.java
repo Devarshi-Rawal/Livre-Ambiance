@@ -3,6 +3,7 @@ package Adapters;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
@@ -30,17 +31,22 @@ public class BookGenresAdapter extends RecyclerView.Adapter<BookGenresAdapter.Bo
     @Override
     public void onBindViewHolder(@NonNull BookGenreViewHolder holder, int position) {
 
+        holder.genreNameTv.setText(dataForBookGenres.get(position));
     }
 
     @Override
     public int getItemCount() {
-        return 0;
+        return dataForBookGenres.size();
     }
 
     class BookGenreViewHolder extends RecyclerView.ViewHolder{
 
+        TextView genreNameTv;
+
         public BookGenreViewHolder(@NonNull View itemView) {
             super(itemView);
+
+            genreNameTv = itemView.findViewById(R.id.tVGenreName);
         }
     }
 }
