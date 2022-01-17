@@ -4,6 +4,7 @@ import static android.content.ContentValues.TAG;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.os.Build;
@@ -20,6 +21,8 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
+
+import Adapters.BookGenresAdapter;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -47,46 +50,37 @@ public class MainActivity extends AppCompatActivity {
         // TODO: 14-01-2022 Firebase config code starts
 
         FirebaseDatabase database = FirebaseDatabase.getInstance();
-        DatabaseReference dbRefGenreNames = database.getReference("BookGenres").child("GenreNames");
 
-        DatabaseReference dbRefGenreIcons = database.getReference("BookGenres").child("GenreIcons");
+        DatabaseReference dbRef = database.getReference("BookGenres");
 
-        Log.d(TAG, "onCreate: DB reference " + dbRefGenreNames);
+        Log.d(TAG, "onCreate: DB reference " + dbRef);
 
-        dbRefGenreNames.addValueEventListener(new ValueEventListener() {
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(MainActivity.this,LinearLayoutManager.VERTICAL,false);
+        genreNamesRv.setLayoutManager(linearLayoutManager);
+
+        dbRef.addValueEventListener(new ValueEventListener() {
             @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 // This method is called once with the initial value and again
                 // whenever data at this location is updated.
-//                String value = dataSnapshot.getValue(String.class);
-//                Log.d(TAG, "Value is: " + value);
-                for (DataSnapshot s: dataSnapshot.getChildren()) {
-                    listOfGenreNames.add(s.getValue().toString());
+                for (DataSnapshot sGn: dataSnapshot.child("GenreNames").getChildren()) {
+                    listOfGenreNames.add(sGn.getValue().toString());
+                }
+
+                for (DataSnapshot sGi: dataSnapshot.child("GenreIcons").getChildren()) {
+                    listOfGenreIcons.add(sGi.getValue().toString());
                 }
                 Log.d(TAG, "onDataChange: GenreNames "+ listOfGenreNames);
+                Log.d(TAG, "onDataChange: GenreIcons "+ listOfGenreIcons);
 
+                BookGenresAdapter bookGenresAdapter = new BookGenresAdapter(MainActivity.this,listOfGenreNames,listOfGenreIcons);
+                genreNamesRv.setAdapter(bookGenresAdapter);
             }
 
             @Override
             public void onCancelled(DatabaseError error) {
                 // Failed to read value
                 Log.w(TAG, "Failed to read value.", error.toException());
-            }
-        });
-
-        dbRefGenreIcons.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-
-                for (DataSnapshot s : snapshot.getChildren()) {
-                    listOfGenreIcons.add(s.getValue().toString());
-                }
-                Log.d(TAG, "onDataChange: GenreIcons " + listOfGenreIcons);
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-
             }
         });
 

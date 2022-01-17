@@ -1,23 +1,33 @@
 package Adapters;
 
+import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.view.ContextMenu;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
 import com.example.livreambiance.R;
 
 import java.util.ArrayList;
 
 public class BookGenresAdapter extends RecyclerView.Adapter<BookGenresAdapter.BookGenreViewHolder> {
 
-    ArrayList<String> dataForBookGenres;
+    Context mContext;
+    ArrayList<String> dataForBookGenres,dataForBookGenreIcon;
 
-    public BookGenresAdapter(ArrayList<String> dataForBookGenres) {
+    public BookGenresAdapter(Context mContext, ArrayList<String> dataForBookGenres,ArrayList<String> dataForBookGenreIcon) {
+
+        this.mContext = mContext;
         this.dataForBookGenres = dataForBookGenres;
+        this.dataForBookGenreIcon = dataForBookGenreIcon;
     }
 
     @NonNull
@@ -32,6 +42,13 @@ public class BookGenresAdapter extends RecyclerView.Adapter<BookGenresAdapter.Bo
     public void onBindViewHolder(@NonNull BookGenreViewHolder holder, int position) {
 
         holder.genreNameTv.setText(dataForBookGenres.get(position));
+
+        Glide.with(mContext).load(dataForBookGenreIcon.get(position)).into(holder.genreIconIv);
+    }
+
+    @Override
+    public int getItemViewType(int position) {
+        return position;
     }
 
     @Override
@@ -41,11 +58,13 @@ public class BookGenresAdapter extends RecyclerView.Adapter<BookGenresAdapter.Bo
 
     class BookGenreViewHolder extends RecyclerView.ViewHolder{
 
+        ImageView genreIconIv;
         TextView genreNameTv;
 
         public BookGenreViewHolder(@NonNull View itemView) {
             super(itemView);
 
+            genreIconIv = itemView.findViewById(R.id.iVGenreIcon);
             genreNameTv = itemView.findViewById(R.id.tVGenreName);
         }
     }
